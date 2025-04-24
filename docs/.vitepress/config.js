@@ -10,7 +10,7 @@ export default {
 
     sidebar: [
       {
-        text: '入门',
+        text: '使用指南',
         items: [
           {text: '项目介绍', link: '/guide/introduction' },
           {text: '环境变量', link: '/guide/environment' },
@@ -18,6 +18,7 @@ export default {
           {text: '常见问题', link: '/guide/faq' },
           {text: '特别感谢', link: '/guide/acknowledgements' },
           {text: '支持我', link: '/guide/supportme' },
+          {text: '联系我', link: '/guide/contactme' },
         ]
       }
     ],
