@@ -1,0 +1,1 @@
+import{_ as i,c as a,o as n,ae as h}from"./chunks/framework.Dh1jimFm.js";const g=JSON.parse('{"title":"常见问题 ❓","description":"","frontmatter":{},"headers":[],"relativePath":"guide/faq.md","filePath":"guide/faq.md"}'),k={name:"guide/faq.md"};function l(p,s,t,e,E,r){return n(),a("div",null,s[0]||(s[0]=[h("",16)]))}const y=i(k,[["render",l]]);export{g as __pageData,y as default};
