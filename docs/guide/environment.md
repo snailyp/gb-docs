@@ -3,15 +3,15 @@
 | 配置项                       | 说明                                                     | 默认值                             |
 | :--------------------------- | :------------------------------------------------------- | :---------------------------------------------------- |
 | **数据库配置** 💾              |                                                          |                                                       |
-| `MYSQL_HOST`                 | 必填，MySQL 数据库主机地址                               |                                            |
-| `MYSQL_PORT`                 | 必填，MySQL 数据库端口                                   |                                                |
-| `MYSQL_USER`                 | 必填，MySQL 数据库用户名                                 |                                         |
-| `MYSQL_PASSWORD`             | 必填，MySQL 数据库密码                                   |                                     |
-| `MYSQL_DATABASE`             | 必填，MySQL 数据库名称                                   |                                    |
+| `MYSQL_HOST`                 | 必填，MySQL 数据库主机地址                               |`mysql-xxxxxxxx.h.aivencloud.com`                                            |
+| `MYSQL_PORT`                 | 必填，MySQL 数据库端口                                   |`100000`                                                |
+| `MYSQL_USER`                 | 必填，MySQL 数据库用户名                                 |`adafd`                                         |
+| `MYSQL_PASSWORD`             | 必填，MySQL 数据库密码                                   | `123456`                                     |
+| `MYSQL_DATABASE`             | 必填，MySQL 数据库名称                                   |`defaultdb`                                    |
 | **API 相关配置** 🔑            |                                                          |                                                       |
-| `API_KEYS`                   | 必填，Gemini API 密钥列表，用于负载均衡                        |   |
-| `ALLOWED_TOKENS`             | 必填，允许访问的 Token 列表                                    |       |
-| `AUTH_TOKEN`                 | 可选，超级管理员token，具有所有权限，不填默认使用 ALLOWED_TOKENS 的第一个 |                                                   |
+| `API_KEYS`                   | 必填，Gemini API 密钥列表，用于负载均衡                        | `["gemini_key1","gemini_key2"]`  |
+| `ALLOWED_TOKENS`             | 必填，允许访问的 Token 列表                                    |   `["allowed_key1","allowed_key2"]`    |
+| `AUTH_TOKEN`                 | 可选，超级管理员token，具有所有权限，不填默认使用 ALLOWED_TOKENS 的第一个 |                   `sk-123456`                                |
 | `TEST_MODEL`                 | 可选，用于测试密钥是否可用的模型名                             | `gemini-1.5-flash`                                    |
 | `IMAGE_MODELS`               | 可选，支持绘图功能的模型列表                                   | `["gemini-2.0-flash-exp"]`                            |
 | `SEARCH_MODELS`              | 可选，支持搜索功能的模型列表                                   | `["gemini-2.0-flash-exp"]`                            |

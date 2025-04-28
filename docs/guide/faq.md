@@ -212,6 +212,119 @@ console.log("⏳ 等待请求...");
 serve(handleRequest, { port });
 ```
 
+[Ge0metry](https://linux.do/u/ge0metry)佬提供了cloudflare worker版本的代码，感谢佬
+
+```js
+/**
+ * 目标 API 服务器的 URL
+ * 所有传入的请求将被转发到这个地址
+ * 您也可以考虑将其配置为 Worker 的环境变量 (Secret or Plain Text) 以增加灵活性
+ * 例如: const TARGET_URL = env.TARGET_API_URL;
+ */
+const TARGET_URL = "https://generativelanguage.googleapis.com";
+
+export default {
+  /**
+   * Cloudflare Worker 的主入口函数
+   * @param request - 传入的 HTTP 请求对象
+   * @param env - Worker 的环境变量 (如果配置了)
+   * @param ctx - 执行上下文
+   * @returns 返回从目标服务器获取的响应或错误响应
+   */
+  async fetch(request, env, ctx) { // Removed type annotations
+
+    // 1. 处理 CORS 预检请求 (OPTIONS 方法)
+    const corsResponse = handleCORS(request);
+    if (corsResponse) {
+      return corsResponse; // 如果是预检请求，直接返回处理结果
+    }
+
+    // 2. 处理实际的代理请求
+    try {
+      // 2.1 解析原始请求的 URL，获取路径和查询参数
+      const url = new URL(request.url);
+      const path = url.pathname + url.search; // e.g., "/v1beta/models?key=..."
+
+      // 2.2 构建要请求的目标 URL
+      const targetUrl = `${TARGET_URL}${path}`;
+
+      console.log(`[Worker Proxy Request] ${request.method} ${targetUrl}`);
+
+      // 2.3 复制原始请求的 Headers
+      //     移除 Cloudflare 添加的特定头部信息，避免发送给源站
+      const headers = new Headers(request.headers);
+      headers.delete('cf-connecting-ip');
+      headers.delete('cf-ipcountry');
+      headers.delete('cf-ray');
+      headers.delete('cf-visitor');
+      // headers.set('Host', new URL(TARGET_URL).hostname); // Optional: uncomment if needed
+
+      // 2.4 创建一个新的 Request 对象用于转发
+      const proxyRequest = new Request(targetUrl, {
+        method: request.method,
+        headers: headers,
+        body: request.body ? request.clone().body : undefined,
+        redirect: "follow",
+      });
+
+      // 2.5 使用 fetch API 将请求发送到目标服务器
+      const response = await fetch(proxyRequest);
+
+      // 2.6 构建返回给客户端的响应
+      const responseHeaders = new Headers(response.headers);
+
+      // 2.7 添加 CORS (跨源资源共享) 头部
+      responseHeaders.set("Access-Control-Allow-Origin", "*");
+      responseHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+      responseHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+      // 2.8 创建最终的响应对象
+      const proxyResponse = new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: responseHeaders,
+      });
+
+      console.log(`[Worker Proxy Response] ${response.status} ${response.statusText} for ${request.method} ${targetUrl}`);
+
+      return proxyResponse;
+
+    } catch (error) { // Removed type annotation for error
+      // 3. 如果在代理过程中发生错误，记录错误并返回 500 响应
+      console.error("Worker Proxy Error:", error);
+      // Ensure error message is properly handled even if error is not an Error object
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return new Response(`代理错误: ${errorMessage}`, { status: 500 });
+    }
+  }
+};
+
+/**
+ * 处理 CORS 预检请求 (OPTIONS 方法)
+ * @param request - 传入的 HTTP 请求对象
+ * @returns 如果是 OPTIONS 请求，返回带有 CORS 允许头部的 204 响应；否则返回 null。
+ */
+function handleCORS(request) { // Removed type annotation
+  if (request.method === "OPTIONS") {
+    console.log(`[Worker CORS Preflight] ${request.url}`);
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Max-Age": "86400",
+    };
+    return new Response(null, {
+      status: 204,
+      headers: headers,
+    });
+  }
+  return null; // Removed return type annotation
+}
+```
+
+再到web端里把API基础URL改了 `https://xxxxx.xxxxx.workers.dev/v1beta`
+![cf worker 版本](https://cdn.ldstatic.com/optimized/4X/2/3/4/2340239ce21bffc843ffcb7033099daf9ddf53dd_2_1023x750.jpeg)
+
 ## 7. 重新部署是不是可以把那些多余的配置删掉了？ ✅
 
 是的，可以删掉，配置数据已经保存到数据库了，重新部署，会从数据库读取配置。只需留下数据库的配置、AUTH_TOKEN（进入后台用）和TZ（时区方便看日志）
@@ -245,3 +358,41 @@ serve(handleRequest, { port });
 
 点击settings -> factory rebuild 即可
 ![alt text](image-17.png)
+
+## 15. 绘图功能是只有付费 api 才有的吗？
+
+`imagen-3.0-generate-002` 该绘图模型是需要付费api才能用，普通api可以用`gemini-2.0-flash-image-generations`或`gemini-2.0-flash-image`在对话中生图和修图
+
+## 16. 为什么升级后一些按钮点击没有效果？
+
+js缓存导致，建议通过ctrl + f5清空缓存
+
+## 17. 为什么我检测了key，报了403错误，却没有归为失效key?
+
+因为gemini的key不稳定，经常会报错，无法区分是真的失效还是假的失效。比如失效key会一直429，但是正常的key在请求超过限额也会报429，就不能把它归为失效key。所以我的设计是以失败多少次（该值可以配置），才算是失效的。失效key这也是参考，具体还是需要自己测试，所以失效秘钥列表也会有检测的按钮，就是用来检测没有失效的key
+
+## 18. 我画图怎么不行了？调用的是gemini-2.0-flash-exp-image啊，日志显示这个错误
+
+```plaintext
+API call failed with status code 400, {
+“error”: {
+“code”: 400,
+“message”: “Code execution is not enabled for models/gemini-2.0-flash-exp”,
+“status”: “INVALID_ARGUMENT”
+    }
+}
+```
+
+把code execution关了
+
+## 19. gemini balance 可以关闭思考吗 thinkingConfig (“thinkingBudget":0} ，CS里是这么设置吗
+
+自带关闭，模型设置那里有思考模型列表把2.5flash加进去，会有一个nonthinking的模型，是不带思考的
+
+## 20. error parsing value for field “API_KEYS” from source “EnvSettingsSource”
+
+API_KEYS格式配置错了，一定是列表形式，比如：`["AIxxxxxxxxx"]`,包括中括号和双引号
+
+## 21. 失败和无效密钥是怎么判定的，我以为失败就会被判定成无效
+
+无效不是真无效，只是遇到一定次数的报错，可能遇到限额什么的了，未来可能能继续使用的
