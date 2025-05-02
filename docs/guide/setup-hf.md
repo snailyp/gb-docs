@@ -70,7 +70,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
 | **时区配置**             |                                                          | |
 | `TZ`                 | 时区设置，建议值 `Asia/Shanghai` | |
 | **数据库配置**               |                                                          | |
-| `MYSQL_HOST`                 | 必填，MySQL 数据库主机地址                               |    `mysql-xxxxxxxx.h.aivencloud.com` |
+| `MYSQL_HOST`                 | 必填，MySQL 数据库主机地址                               |    `xxxxxxxx.h.aivencloud.com` |
 | `MYSQL_PORT`                 | 必填，MySQL 数据库端口                                   | `100000` |
 | `MYSQL_USER`                 | 必填，MySQL 数据库用户名                                 | `adafd` |
 | `MYSQL_PASSWORD`             | 必填，MySQL 数据库密码                                   | `123456` |
