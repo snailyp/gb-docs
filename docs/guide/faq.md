@@ -35,6 +35,9 @@
 BASE_URL可以设置成代理地址：比如可以自建gemini代理，以deno为例：BASE_URL=`https://你的deno代理地址/v1beta`
 这里提供一个deno版本的代码，你也可以通过cloudflare worker搭建，或者使用cloudflare ai gateway。也可用bbb搭建好的代理`https://api-proxy.me/gemini/v1beta`
 
+<details>
+<summary>Deno</summary>
+
 ```js
 // proxy_server.ts
 import { serve } from "https://deno.land/std/http/server.ts";
@@ -211,6 +214,10 @@ console.log("⏳ 等待请求...");
 // 4. 启动 HTTP 服务器，使用 handleRequest 函数处理所有请求
 serve(handleRequest, { port });
 ```
+</details>
+
+<details>
+<summary>Cloudflare Workers</summary>
 
 [Ge0metry](https://linux.do/u/ge0metry)佬提供了cloudflare worker版本的代码，感谢佬
 
@@ -324,6 +331,19 @@ function handleCORS(request) { // Removed type annotation
 
 再到web端里把API基础URL改了 `https://xxxxx.xxxxx.workers.dev/v1beta`
 ![cf worker 版本](https://cdn.ldstatic.com/optimized/4X/2/3/4/2340239ce21bffc843ffcb7033099daf9ddf53dd_2_1023x750.jpeg)
+</details>
+
+<details>
+<summary>Cloudflare AI Gateway</summary>
+
+也可以使用CF大善人提供的 [AI Gateway](https://www.cloudflare.com/zh-cn/developer-platform/products/ai-gateway/https://www.cloudflare.com/zh-cn/developer-platform/products/ai-gateway/).
+
+CF 控制台 -> AI -> AI Gateway -> 创建网关 -> 点进去 -> 右上角 API -> 平台 -> 选 Google AI Studio，得到**API 端点**。
+
+回到 Gemini Balance，把刚刚得到的**API 端点**填入 **API基础URL**，结尾添加 `/v1beta`，例如：`https://gateway.ai.cloudflare.com/v1/xxxxxxxxxxx/xxx/google-ai-studio/v1beta`。
+
+尝试发送一个请求，回到 CF AI Gateway，刷新，正常情况下能够看到请求日志。
+</details>
 
 ## 7. 重新部署是不是可以把那些多余的配置删掉了？ ✅
 
