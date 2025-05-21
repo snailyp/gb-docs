@@ -1,4 +1,7 @@
 # HuggingFace部署数据库版本 🚀
+> [!CAUTION]
+>
+> 不推荐huggingface部署了，现在风控很严重，并且openai格式的请求头也会被删
 
 ## 一、准备工作 准备好了吗？清单在这里！📋
 
