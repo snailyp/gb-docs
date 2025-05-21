@@ -14,7 +14,8 @@ export default {
         items: [
           {text: '项目介绍', link: '/guide/introduction' },
           {text: '环境变量', link: '/guide/environment' },
-          {text: '安装部署', link: '/guide/setup-hf' },
+          {text: 'huggingface部署', link: '/guide/setup-hf' },
+          {text: 'clawcloud部署sqlite版本', link: '/guide/setup-clawcloud-sqlite' },
           {text: 'render和clawcloud部署', link: '/guide/setup-render' },
           {text: 'render和clawcloud更新', link: '/guide/update-render' },
           {text: '使用说明', link: '/guide/usage' },
