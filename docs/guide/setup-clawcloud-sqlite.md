@@ -95,7 +95,8 @@
          SQLITE_DATABASE=default_db
          API_KEYS=[""]
          ALLOWED_TOKENS=[""]
-         AUTH_TOKEN=TZ=Asia/Shanghai
+         AUTH_TOKEN=
+         TZ=Asia/Shanghai
          ```
 
          > [!IMPORTANT]
