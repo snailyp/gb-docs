@@ -18,7 +18,7 @@ export default {
           {text: 'clawcloud部署sqlite版本', link: '/guide/setup-clawcloud-sqlite' },
           {text: 'render和clawcloud部署', link: '/guide/setup-render' },
           {text: 'render和clawcloud更新', link: '/guide/update-render' },
-          {text: '使用说明', link: '/guide/usage' },
+          // {text: '使用说明', link: '/guide/usage' },
           {text: '常见问题', link: '/guide/faq' },
           {text: '特别感谢', link: '/guide/acknowledgements' },
           {text: '支持我', link: '/guide/supportme' },
