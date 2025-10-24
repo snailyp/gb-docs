@@ -16,6 +16,7 @@ export default {
           {text: '环境变量', link: '/guide/environment' },
           {text: 'huggingface部署', link: '/guide/setup-hf' },
           {text: 'clawcloud部署sqlite版本', link: '/guide/setup-clawcloud-sqlite' },
+          {text: 'Zeabur部署Gemini Balance', link: '/guide/setup-zeabur' },
           {text: 'render和clawcloud部署', link: '/guide/setup-render' },
           {text: 'render和clawcloud更新', link: '/guide/update-render' },
           // {text: '使用说明', link: '/guide/usage' },
